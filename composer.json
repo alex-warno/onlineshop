@@ -1,0 +1,27 @@
+{
+  "name": "alex_warno/onlineshop",
+  "description": "test online shop",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alex Warno",
+      "email": "a.krupenenkov@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Shop\\": "classes"
+    }
+  },
+  "require": {
+    "php": ">=7.3",
+    "ext-yaml": "*",
+    "smarty/smarty": "3.1.36",
+    "ext-mysqli": "*",
+    "doctrine/orm": "^2.6",
+    "doctrine/migrations": "^2.1",
+    "ext-fileinfo": "*",
+    "ext-json": "*"
+  }
+}

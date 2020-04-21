@@ -1,0 +1,28 @@
+smarty:
+  templates_dir: /templates/
+  templates_c_dir: /templates/compiled/
+  cache_dir: /cache/
+  config_dir: /config/
+doctrine:
+  connection:
+    driver: pdo_mysql
+    host: localhost
+    dbname: onlineshop
+    user: shop
+    password: Testshop123.
+  devMode: true
+  entities_dir: /classes/Models
+  proxy_dir: /cache/proxy
+admin_credentials:
+  login: administer
+  password: admin123
+productsImgDir: /assets/img/products/
+sectionsImageDir: /assets/img/sections/
+allowedFiles:
+  jpg: image/jpeg
+  png: image/png
+  gif: image/gif
+itemsOnPage: 12
+mail:
+  adminMail: a.krupenenkov@gmail.com
+  sender: team@onlineshop.local
