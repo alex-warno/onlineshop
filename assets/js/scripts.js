@@ -1,10 +1,8 @@
 let $timer;
 
 handleSuccessChangeCart = data => {
-    if (typeof data['error'] !== "undefined") {
-        data.error.forEach(e => {
-            addError(e);
-        });
+    if (typeof data.error !== "undefined") {
+            addError(data.error);
     } else if (typeof data.success !== undefined) {
         let $cart_count = $('.cart_count'),
             $cart_sum = $('.cart_sum'),
