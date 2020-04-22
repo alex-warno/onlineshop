@@ -3,10 +3,8 @@
 
 namespace Shop\Controllers;
 
-
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Shop\Lib\EntityManagerInstance;
 use Shop\Models\Cart;
 use Shop\Models\Section;
 use Shop\View;
@@ -17,6 +15,8 @@ abstract class AbstractController
     protected $view;
 
     /**
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function init() {
         $this->registerActions();
@@ -37,20 +37,18 @@ abstract class AbstractController
         }
 
         /** если заказ не существует, сотворим его */
-        if (!isset($_COOKIE['cart_id']) && !isset($_POST['cart_id'])) {
+        if (!isset($_COOKIE['cart_id'])) {
             /** @var Cart $cart */
+            $hashId = uniqid();
             $cart = Cart::create();
-            $cart->setHashId(uniqid());
+            $cart->setHashId($hashId);
             $cart->save();
-            setcookie('cart_id', $cart->getHashId(), '/', 604800);
+            setcookie('cart_id', $hashId, time() + 604800, '/');
         }
 
         $this->view->assign('cart', $cart);
     }
 
-    /**
-     * @return mixed
-     */
     protected abstract function registerActions();
 
     /**

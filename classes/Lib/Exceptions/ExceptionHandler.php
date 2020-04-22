@@ -11,11 +11,4 @@ class ExceptionHandler extends Exception {
     {
         parent::__construct($message, $code, $previous);
     }
-
-    /*
-    public function handleException($message, $code, \Throwable $throwable = null) {
-        http_response_code($this->getCode());
-        die();
-    }
-     */
 }

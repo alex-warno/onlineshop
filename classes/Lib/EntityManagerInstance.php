@@ -8,6 +8,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Setup;
 
 class EntityManagerInstance extends EntityManager
@@ -24,11 +25,16 @@ class EntityManagerInstance extends EntityManager
         /** клонировать синглтоны тоже не есть хорошо */
     }
 
+    /**
+     * @return EntityManager
+     * @throws Exceptions\ServerErrorException
+     * @throws ORMException
+     */
     public static function getInstance() {
         if (!self::$instance) {
             $isDevMode = Config::getConfig('doctrine:devMode');
-            $entitiesDir = $_SERVER['DOCUMENT_ROOT'].Config::getConfig('doctrine:entities_dir');
-            $proxyDir = $_SERVER['DOCUMENT_ROOT'].Config::getConfig('doctrine:proxy_dir');
+            $entitiesDir = __ROOT__.Config::getConfig('doctrine:entities_dir');
+            $proxyDir = __ROOT__.Config::getConfig('doctrine:proxy_dir');
             $config = Setup::createAnnotationMetadataConfiguration(
                 array($entitiesDir),
                 $isDevMode,

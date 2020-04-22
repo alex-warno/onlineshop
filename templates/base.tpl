@@ -30,14 +30,22 @@
 </div>
 
 <div class="b-content">
-    {foreach from=$messages item=$message}
-        <p>{{$message}}</p>
-    {/foreach}
-    {foreach from=$errors item=$error}
-        <p>{{$error}}</p>
-    {/foreach}
-    {block name=content}
+    <div class="b-messages_wrapper">
+        <div class="b-messages b-messages_success {if count($messages) eq 0}b-messages_hide{/if}">
+            {foreach from=$messages item=$message}
+                <p>{{$message}}</p>
+            {/foreach}
+        </div>
 
+        <div class="b-messages b-messages_errors {if count($errors) eq 0}b-messages_hide{/if}">
+            {foreach from=$errors item=$error}
+                <p>{{$error}}</p>
+            {/foreach}
+        </div>
+    </div>
+
+    {block name=content}
+        Content here
     {/block}
     </div>
 </div>

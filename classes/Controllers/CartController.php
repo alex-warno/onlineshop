@@ -6,13 +6,13 @@ namespace Shop\Controllers;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Shop\Lib\EntityManagerInstance;
-use Shop\Lib\Exceptions\BadRequestException;
+use SendGrid\Mail\TypeException;
 use Shop\Lib\Exceptions\NotFoundException;
 use Shop\Lib\MailSender;
 use Shop\Models\Cart;
 use Shop\Models\Cart_Product;
 use Shop\Models\Product;
+use SmartyException;
 
 class CartController extends AbstractController
 {
@@ -26,9 +26,6 @@ class CartController extends AbstractController
         ];
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function index() {
         /** @var Cart $cart */
         $this->view->display('cart.index.tpl');
@@ -43,24 +40,22 @@ class CartController extends AbstractController
         $product = $this->validateRequest($params);
         $cart = Cart::get(['hashId' => $_COOKIE['cart_id']])[0];
         $cProduct = Cart_Product::get(['cart' => $cart, 'product' => $product]);
+        $count = count($cart->getProducts()) + $_POST['count'];
+        $sum = $cart->getSum() + ($product->getPrice() * $_POST['count']);
         if (empty($cProduct[0])) {
             $cProduct = Cart_Product::create();
             $cProduct->setCart($cart);
             $cProduct->setProduct($product);
             $cProduct->setAmount($_POST['count']);
-            $count = $cProduct->getAmount();
-            $sum = $product->getPrice() * $cProduct->getAmount();
         } else {
             $cProduct = $cProduct[0];
             $cProduct->setAmount($cProduct->getAmount() + $_POST['count']);
-            $count = count($cart->getProducts());
-            $sum = $cart->getSum();
         }
         $cProduct->save();
         $product->setAmount($product->getAmount() - $_POST['count']);
         $product->save();
         $result = [
-            'success' => true,
+            'success' => $_POST['count'] > 1 ? 'Товары добавлены' : 'Товар добавлен',
             'cart' => [
                 'count' => $count,
                 'sum' => $sum,
@@ -93,7 +88,7 @@ class CartController extends AbstractController
         $product->save();
         $cart->save();
         $result = [
-            'success' => true,
+            'success' => $_POST['count'] > 1 ? 'Товары удалены' : 'Товар удален',
             'cart' => [
                 'count' => count($cart->getProducts()),
                 'sum' => $cart->getSum(),
@@ -142,6 +137,10 @@ class CartController extends AbstractController
         return $product;
     }
 
+    /**
+     * @throws TypeException
+     * @throws SmartyException
+     */
     public function checkout() {
         if (isset($_POST['submit'])) {
             $cart = Cart::get(['hashId' => $_COOKIE['cart_id']])[0];
@@ -161,6 +160,10 @@ class CartController extends AbstractController
         $this->view->display('cart.checkout.tpl');
     }
 
+    /**
+     * @param array $params
+     * @throws NotFoundException
+     */
     public function confirm($params = null) {
         if (!isset($params[0])) {
             throw new NotFoundException();

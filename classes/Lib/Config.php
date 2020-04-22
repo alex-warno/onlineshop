@@ -4,10 +4,12 @@
 namespace Shop\Lib;
 
 
+use Shop\Lib\Exceptions\ServerErrorException;
+
 class Config
 {
     public static $instance;
-    private $config;
+    private $config = [];
 
     /**
      * Инициализируем конфиг
@@ -15,12 +17,11 @@ class Config
     public static function init() {
         if (!self::$instance) {
             self::$instance = new self();
-            $root_dir = defined('__ROOT__') ? __ROOT__ : $_SERVER['DOCUMENT_ROOT'];
-            $conf_filename = $root_dir.'/config/config.yml';
-            if (file_exists($conf_filename)) {
-                self::$instance->config = yaml_parse_file($conf_filename);
-            } else {
-                die($conf_filename);
+            foreach (glob(__ROOT__.'/config/*.yml') as $file) {
+                $content = yaml_parse_file($file);
+                if (!!$content) {
+                    self::$instance->config = array_merge(self::$instance->config, $content);
+                }
             }
         }
     }
@@ -29,18 +30,19 @@ class Config
      * Рекурсивно обходит конфиг и возвращает запрашиваемое значение
      * @param $path
      * @return mixed
+     * @throws ServerErrorException
      */
     public static function getConfig($path) {
         if (!self::$instance) {
             self::init();
         }
         $value = self::$instance->config;
-        $path = explode(':', $path);
-        foreach ($path as $item) {
+        $path_array = explode(':', $path);
+        foreach ($path_array as $item) {
             if (key_exists($item, $value)) {
                 $value = $value[$item];
             } else {
-                die('This path not exist');
+                throw new ServerErrorException('Конфигурация не найдена');
             }
         }
         return $value;

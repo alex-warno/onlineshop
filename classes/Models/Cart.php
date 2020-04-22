@@ -81,7 +81,7 @@ class Cart extends AbstractModel
     /**
      * @var Collection $cartProducts
      *
-     * @ORM\OneToMany(targetEntity="Cart_Product", mappedBy="cart", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Cart_Product", mappedBy="cart")
      */
     public $cartProducts;
 
@@ -258,13 +258,13 @@ class Cart extends AbstractModel
         if ($this->phone == '') {
             $errors[] = 'Введите номер тефона';
         }
-        if (preg_match('/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $this->phone) == false) {
+        else if (preg_match('/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $this->phone) == false) {
             $errors[] = 'Некорректный номер телефона';
         }
         if ($this->mail == '') {
             $errors[] = 'Введите e-mail';
         }
-        if (preg_match('/^\S+@\S+[.]\S+$/', $this->mail) == false) {
+        else if (preg_match('/^\S+@\S+[.]\S+$/', $this->mail) == false) {
             $errors[] = 'Некорректный e-mail';
         }
         if (!$this->delivery || (new DateTime('tomorrow'))->modify('+ 10 hours') > $this->delivery) {

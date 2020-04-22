@@ -16,17 +16,20 @@
                 <div class="b-cart-item__description">
                     <a href="/product/show/{{$product->id}}"><p>{{$product->name}}</p></a>
                     <p>{{$product->price}} руб.</p>
+
                     <div class="b-cart-item__plusminus">
                         <img class="b-cart-item__plusminus_button deleteCartButton minus" src="/assets/img/minus.png" id="delete{{$product->id}}" alt="Меньше">
                         <span class="product_amount{{$product->id}}">{{$cProduct->amount}}</span>
                         <input type="hidden" id="product{{$product->id}}" value="1">
-                        <img class="addCartButton b-cart-item__plusminus_button" src="/assets/img/plus.png" id="add{{$product->id}}" alt="Больше">
+                        {if $product->getAmount() gt 0}
+                            <img class="addCartButton b-cart-item__plusminus_button" src="/assets/img/plus.png" id="add{{$product->id}}" alt="Больше">
+                        {/if}
                     </div>
                     <button class="b-button deleteCartButton" id="delete{{$product->id}}" value="{{$cProduct->amount}}">Удалить из корзины</button>
                 </div>
             </div>
         {/foreach}
-        {if count($cProducts) != 0}
+        {if count($cProducts) gt 0}
             <a href="/cart/checkout/"><button class="b-button">Оформить заказ</button></a>
         {/if}
     {/block}

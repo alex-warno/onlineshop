@@ -2,3 +2,6 @@
 /vendor/
 /composer.lock
 /templates/compiled/
+/assets/img/products/
+/assets/img/sections/
+/config/secret.yml

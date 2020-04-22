@@ -8,7 +8,11 @@
         <p>{{$product->description}}</p>
     </div>
     <div class="b-product__add-block">
-        <p><label for="product{{$product->id}}">Количество: </label><input type="number" id="product{{$product->id}}" value="1"></p>
-        <p><button class="addCartButton b-button" id="add{{$product->id}}">В корзину</button></p>
+        {if $product->getAmount() gt 0}
+            <p><label for="product{{$product->id}}">Количество: </label><input type="number" id="product{{$product->id}}" value="1"></p>
+            <p><button class="addCartButton b-button" id="add{{$product->id}}">В корзину</button></p>
+        {else}
+            <p>Товар закончился</p>
+        {/if}
     </div>
 {/block}

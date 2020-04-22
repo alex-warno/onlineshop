@@ -13,9 +13,6 @@ doctrine:
   devMode: true
   entities_dir: /classes/Models
   proxy_dir: /cache/proxy
-admin_credentials:
-  login: administer
-  password: admin123
 productsImgDir: /assets/img/products/
 sectionsImageDir: /assets/img/sections/
 allowedFiles:
@@ -23,6 +20,3 @@ allowedFiles:
   png: image/png
   gif: image/gif
 itemsOnPage: 12
-mail:
-  adminMail: a.krupenenkov@gmail.com
-  sender: team@onlineshop.local

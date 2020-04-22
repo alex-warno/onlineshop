@@ -198,3 +198,37 @@ a {
     border: 1px solid lightgray;
     box-sizing: border-box;
 }
+
+.b-messages_wrapper {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}
+
+.b-messages {
+    font-size: x-small;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.b-messages_errors {
+    background-color: tomato;
+}
+
+.b-messages_success {
+    background-color: springgreen;
+}
+
+.b-messages_hide {
+    display: none;
+}
+
+.b-paginator {
+    margin: 5px auto;
+}
+
+.b-paginator__item {
+    border: 1px solid blue;
+    padding: 3px;
+}

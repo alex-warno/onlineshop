@@ -10,6 +10,7 @@ use Doctrine\ORM\ORMException;
 use finfo;
 use Shop\Lib\Config;
 use Shop\Lib\Exceptions\BadRequestException;
+use Shop\Lib\Exceptions\ServerErrorException;
 use Shop\Models\Product;
 use Shop\Models\Section;
 
@@ -53,6 +54,7 @@ class AdminController extends AbstractController
 
     /**
      * @throws BadRequestException
+     * @throws ServerErrorException
      */
     public function login() {
         if (!isset($_POST['login']) && !isset($_POST['password'])) {
@@ -61,7 +63,6 @@ class AdminController extends AbstractController
         if ($_POST['login'] == Config::getConfig('admin_credentials:login')
             && $_POST['password'] == Config::getConfig('admin_credentials:password')) {
             session_start();
-            echo 'good';
             $_SESSION['admin_auth'] = true;
         }
         $this->redirect('/admin/');
@@ -70,6 +71,7 @@ class AdminController extends AbstractController
     /**
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws ServerErrorException
      */
     public function addsection() {
         $this->checkAuth();
@@ -79,7 +81,7 @@ class AdminController extends AbstractController
             isset($_POST['parent']) &&
             isset($_FILES['image'])
         ) {
-            $dir = $_SERVER['DOCUMENT_ROOT'] . Config::getConfig('sectionsImageDir');
+            $dir = __ROOT__.Config::getConfig('sectionsImageDir');
             $filename = $this->imageUpload($_FILES['image'], $dir);
             if (!empty($filename)) {
                 /** @var Section $section */
@@ -98,6 +100,7 @@ class AdminController extends AbstractController
     /**
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws ServerErrorException
      */
     public function addproduct() {
         $this->checkAuth();
@@ -108,7 +111,7 @@ class AdminController extends AbstractController
             isset($_POST['amount']) &&
             isset($_FILES['image'])
         ) {
-            $dir = $_SERVER['DOCUMENT_ROOT'] . Config::getConfig('productsImgDir');
+            $dir = __ROOT__ . Config::getConfig('productsImgDir');
             $filename = $this->imageUpload($_FILES['image'], $dir);
             if (!empty($filename)) {
                 /** @var Product $product */
@@ -128,6 +131,7 @@ class AdminController extends AbstractController
      * @param $file
      * @param $uploadDir
      * @return string|null
+     * @throws ServerErrorException
      */
     private function imageUpload($file, $uploadDir) {
         $tmpfilename = $file['tmp_name'];
